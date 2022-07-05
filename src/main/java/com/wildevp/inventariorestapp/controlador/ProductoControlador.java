@@ -43,6 +43,7 @@ public class ProductoControlador {
     }
 
     //Metodo actualizar producto
+    @PutMapping("/productos/{id}")
     public ResponseEntity<?> updateProducto(@RequestBody Producto producto, @PathVariable Integer id) {
         try {
             Producto productoExiste = productoServicio.obtenerProductoPorId(id);
@@ -54,6 +55,9 @@ public class ProductoControlador {
     }
 
     //Metodo eliminar producto
-
+    @DeleteMapping("/productos/{id}")
+    public void deleteProducto(@PathVariable Integer id){
+        productoServicio.eliminarProducto(id);
+    }
 
 }
