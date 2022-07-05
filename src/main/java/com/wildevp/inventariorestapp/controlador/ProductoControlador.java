@@ -6,8 +6,9 @@ package com.wildevp.inventariorestapp.controlador;
 import com.wildevp.inventariorestapp.modelo.Producto;
 import com.wildevp.inventariorestapp.servicio.ProductoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,9 +18,42 @@ public class ProductoControlador {
     private ProductoServicio productoServicio;
 
     //Agregamos el controlador para exponer la ruta en la consumiremos nuestro servicio(Rest)
+
+    //Metodo para consultar todos los productos
     @GetMapping("/productos")
-    public List<Producto> productoList(){
+    public List<Producto> productoList() {
         return productoServicio.productoList();
     }
+
+    //Metodo para filtrar por id
+    @GetMapping("/productos/{id}")
+    public ResponseEntity<Producto> productoById(@PathVariable Integer id) {
+        try {
+            Producto producto = productoServicio.obtenerProductoPorId(id);
+            return new ResponseEntity<Producto>(producto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Metodo para guardar un nuevo producto
+    @PostMapping("/productos")
+    public void saveProducto(@RequestBody Producto producto) {
+        productoServicio.guardarProducto(producto);
+    }
+
+    //Metodo actualizar producto
+    public ResponseEntity<?> updateProducto(@RequestBody Producto producto, @PathVariable Integer id) {
+        try {
+            Producto productoExiste = productoServicio.obtenerProductoPorId(id);
+            productoServicio.guardarProducto(producto);
+            return new ResponseEntity<Producto>(producto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Metodo eliminar producto
+
 
 }
