@@ -47,7 +47,9 @@ public class ProductoControlador {
     public ResponseEntity<?> updateProducto(@RequestBody Producto producto, @PathVariable Integer id) {
         try {
             Producto productoExiste = productoServicio.obtenerProductoPorId(id);
-            productoServicio.guardarProducto(producto);
+            productoExiste.setNombre(producto.getNombre());
+            productoExiste.setPrecio(producto.getPrecio());
+            productoServicio.guardarProducto(productoExiste);
             return new ResponseEntity<Producto>(producto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
